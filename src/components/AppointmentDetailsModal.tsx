@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Appointment, BookingFormData, AppointmentType } from '@/lib/types/appointment';
+import { Appointment, BookingFormData, AppointmentType, ScheduledBy } from '@/lib/types/appointment';
 import { formatDateDisplay } from '@/lib/utils/dateUtils';
 
 const APPOINTMENT_TYPES: AppointmentType[] = ['Sales Call', 'Demo', 'Follow-up'];
+const SCHEDULED_BY_OPTIONS: ScheduledBy[] = ['Guillermo Mariscal', 'Monica Gutierrez', 'Johnny Infante', 'Edwin Palomera', 'Samuel Carrillo'];
 
 interface AppointmentDetailsModalProps {
   isOpen: boolean;
@@ -31,6 +32,7 @@ export default function AppointmentDetailsModal({
     employees: appointment.employees,
     notes: appointment.notes || '',
     appointmentType: appointment.appointmentType,
+    scheduledBy: appointment.scheduledBy,
   });
 
   if (!isOpen) return null;
@@ -63,6 +65,7 @@ export default function AppointmentDetailsModal({
       employees: appointment.employees,
       notes: appointment.notes || '',
       appointmentType: appointment.appointmentType,
+      scheduledBy: appointment.scheduledBy,
     });
     setIsEditing(false);
   };
@@ -111,6 +114,23 @@ export default function AppointmentDetailsModal({
             </p>
             <p className="text-blue-800">
               <span className="font-medium">Sales Rep:</span> {appointment.salesRep}
+            </p>
+            <p className="text-blue-800">
+              <span className="font-medium">Scheduled By:</span> {isEditing ? (
+                <select
+                  className="ml-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black text-sm"
+                  value={editData.scheduledBy}
+                  onChange={(e) => setEditData({ ...editData, scheduledBy: e.target.value as ScheduledBy })}
+                >
+                  {SCHEDULED_BY_OPTIONS.map((person) => (
+                    <option key={person} value={person}>
+                      {person}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                appointment.scheduledBy
+              )}
             </p>
           </div>
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AppointmentType, BookingFormData } from '@/lib/types/appointment';
+import { AppointmentType, BookingFormData, ScheduledBy } from '@/lib/types/appointment';
 import { formatDateDisplay } from '@/lib/utils/dateUtils';
 
 interface BookingModalProps {
@@ -12,6 +12,7 @@ interface BookingModalProps {
 }
 
 const APPOINTMENT_TYPES: AppointmentType[] = ['Sales Call', 'Demo', 'Follow-up'];
+const SCHEDULED_BY_OPTIONS: ScheduledBy[] = ['Guillermo Mariscal', 'Monica Gutierrez', 'Johnny Infante', 'Edwin Palomera', 'Samuel Carrillo'];
 
 export default function BookingModal({
   isOpen,
@@ -32,6 +33,7 @@ export default function BookingModal({
     employees: '',
     notes: '',
     appointmentType: 'Sales Call',
+    scheduledBy: 'Guillermo Mariscal',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -193,6 +195,28 @@ export default function BookingModal({
               {APPOINTMENT_TYPES.map((type) => (
                 <option key={type} value={type}>
                   {type}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Scheduled By *
+            </label>
+            <select
+              required
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+              value={formData.scheduledBy}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  scheduledBy: e.target.value as ScheduledBy,
+                })
+              }
+            >
+              {SCHEDULED_BY_OPTIONS.map((person) => (
+                <option key={person} value={person}>
+                  {person}
                 </option>
               ))}
             </select>

@@ -6,6 +6,8 @@ export type AppointmentType = 'Sales Call' | 'Demo' | 'Follow-up';
 
 export type AppointmentStatus = 'scheduled' | 'completed' | 'cancelled';
 
+export type ScheduledBy = 'Guillermo Mariscal' | 'Monica Gutierrez' | 'Johnny Infante' | 'Edwin Palomera' | 'Samuel Carrillo';
+
 export interface Appointment {
   id: string;
   salesRep: SalesRep;
@@ -21,6 +23,7 @@ export interface Appointment {
   employees: string;
   notes?: string;
   appointmentType: AppointmentType;
+  scheduledBy: ScheduledBy;
   bookedBy: string;
   bookedAt: Date;
   status: AppointmentStatus;
@@ -37,4 +40,5 @@ export interface BookingFormData {
   employees: string;
   notes?: string;
   appointmentType: AppointmentType;
+  scheduledBy: ScheduledBy;
 } 
