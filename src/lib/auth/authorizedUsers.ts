@@ -4,7 +4,9 @@
 export const AUTHORIZED_EMAILS = [
   // Add authorized email addresses here
   'your-email@gmail.com', // Replace with your actual email
-  'admin@familyfirstenergy.com', // Example - replace with real emails
+  'soccerneversleeps@gmail.com', // Example - replace with real emails
+  'newuser@company.com', // ← Add new email here
+  'another@gmail.com', // ← Add another one
   // Add more authorized emails as needed
 ];
 
