@@ -55,58 +55,57 @@ export default function BookingModal({
           </p>
           <p className="text-gray-600">Sales Rep: {salesRep}</p>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Customer Name *
             </label>
             <input
+              id="customer-name"
               type="text"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
               value={formData.customerName}
               onChange={(e) =>
                 setFormData({ ...formData, customerName: e.target.value })
               }
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Phone Number *
             </label>
             <input
+              id="customer-phone"
               type="tel"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
               value={formData.customerPhone}
               onChange={(e) =>
                 setFormData({ ...formData, customerPhone: e.target.value })
               }
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Email (optional)
             </label>
             <input
+              id="customer-email"
               type="email"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
               value={formData.customerEmail}
               onChange={(e) =>
                 setFormData({ ...formData, customerEmail: e.target.value })
               }
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Appointment Type
             </label>
             <select
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
               value={formData.appointmentType}
               onChange={(e) =>
                 setFormData({
@@ -122,13 +121,12 @@ export default function BookingModal({
               ))}
             </select>
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Notes (optional)
             </label>
             <textarea
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
               rows={3}
               value={formData.notes}
               onChange={(e) =>
@@ -136,7 +134,6 @@ export default function BookingModal({
               }
             />
           </div>
-
           <div className="flex justify-end space-x-3 mt-6">
             <button
               type="button"

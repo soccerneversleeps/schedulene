@@ -10,6 +10,14 @@ import BookingModal from './BookingModal';
 
 const SALES_REPS: SalesRep[] = ['Rep A', 'Rep B'];
 
+function formatWeekRange(dates: Date[]) {
+  const start = dates[0];
+  const end = dates[6];
+  const startStr = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const endStr = end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return `${startStr} – ${endStr}`;
+}
+
 export default function Calendar() {
   const { user } = useAuth();
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -24,16 +32,13 @@ export default function Calendar() {
 
   useEffect(() => {
     if (!user) return;
-
     const startDate = formatDate(weekDates[0]);
     const endDate = formatDate(weekDates[6]);
-
     const q = query(
       collection(db, 'appointments'),
       where('date', '>=', startDate),
       where('date', '<=', endDate)
     );
-
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const appointmentsData = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -41,7 +46,6 @@ export default function Calendar() {
       })) as Appointment[];
       setAppointments(appointmentsData);
     });
-
     return () => unsubscribe();
   }, [user, weekDates]);
 
@@ -51,7 +55,6 @@ export default function Calendar() {
 
   const handleBookingSubmit = async (formData: BookingFormData) => {
     if (!user || !selectedSlot) return;
-
     const appointmentData = {
       ...formData,
       salesRep: selectedSlot.salesRep,
@@ -61,8 +64,8 @@ export default function Calendar() {
       bookedAt: serverTimestamp(),
       status: 'scheduled' as const,
     };
-
     await addDoc(collection(db, 'appointments'), appointmentData);
+    setSelectedSlot(null);
   };
 
   const getAppointmentForSlot = (date: Date, timeSlot: string, salesRep: string) => {
@@ -74,49 +77,68 @@ export default function Calendar() {
     );
   };
 
+  const goToPreviousWeek = () => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev);
+      newDate.setDate(newDate.getDate() - 7);
+      return newDate;
+    });
+  };
+  const goToNextWeek = () => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev);
+      newDate.setDate(newDate.getDate() + 7);
+      return newDate;
+    });
+  };
+  const goToToday = () => {
+    setCurrentDate(new Date());
+  };
+
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Appointment Calendar</h1>
-        <div className="space-x-2">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-4 gap-2">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight drop-shadow-sm mb-1" style={{ letterSpacing: '-0.01em' }}>Appointment Calendar</h1>
+          <div className="text-lg font-medium text-blue-700 bg-blue-50 rounded px-3 py-1 inline-block shadow-sm border border-blue-200">
+            {formatWeekRange(weekDates)}
+          </div>
+        </div>
+        <div className="flex gap-2 mt-2 sm:mt-0">
           <button
-            onClick={() => setCurrentDate(new Date())}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            onClick={goToToday}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 transition"
           >
             Today
           </button>
           <button
-            onClick={() => setCurrentDate((prev) => new Date(prev.setDate(prev.getDate() - 7)))}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            onClick={goToPreviousWeek}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 transition"
           >
             Previous Week
           </button>
           <button
-            onClick={() => setCurrentDate((prev) => new Date(prev.setDate(prev.getDate() + 7)))}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            onClick={goToNextWeek}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 transition"
           >
             Next Week
           </button>
         </div>
       </div>
-
       <div className="grid grid-cols-8 gap-4">
-        {/* Time slots column */}
         <div className="col-span-1">
-          <div className="h-12"></div> {/* Header spacer */}
+          <div className="h-12"></div>
           {TIME_SLOTS.map((timeSlot) => (
             <div key={timeSlot} className="h-32 flex items-center justify-center">
               <span className="text-sm text-gray-500">{timeSlot}</span>
             </div>
           ))}
         </div>
-
-        {/* Days columns */}
         {weekDates.map((date) => (
           <div key={date.toISOString()} className="col-span-1">
             <div className="h-12 flex items-center justify-center border-b">
               <div className="text-center">
-                <div className="font-medium">
+                <div className="font-semibold text-gray-800">
                   {date.toLocaleDateString('en-US', { weekday: 'short' })}
                 </div>
                 <div className="text-sm text-gray-500">
@@ -141,7 +163,6 @@ export default function Calendar() {
           </div>
         ))}
       </div>
-
       {selectedSlot && (
         <BookingModal
           isOpen={!!selectedSlot}

@@ -1,30 +1,36 @@
 'use client';
-
-import { useState } from 'react';
+import SignInWithGoogle from '@/components/SignInWithGoogle';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase/firebase';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function Login() {
+  const { user, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
-
+    setFormLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/');
     } catch (err) {
       setError('Failed to sign in. Please check your credentials.');
       console.error('Login error:', err);
     } finally {
-      setLoading(false);
+      setFormLoading(false);
     }
   };
 
@@ -71,21 +77,27 @@ export default function Login() {
               />
             </div>
           </div>
-
           {error && (
             <div className="text-red-500 text-sm text-center">{error}</div>
           )}
-
           <div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={formLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {formLoading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
         </form>
+        <div className="my-4 flex items-center">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="mx-2 text-gray-400">or</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+        <div className="flex justify-center">
+          <SignInWithGoogle />
+        </div>
       </div>
     </div>
   );
