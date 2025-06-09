@@ -11,9 +11,14 @@ export interface Appointment {
   salesRep: SalesRep;
   date: string; // YYYY-MM-DD format
   timeSlot: TimeSlot;
-  customerName: string;
-  customerPhone: string;
-  customerEmail?: string;
+  businessName: string;
+  meterNumber: string;
+  contactName: string;
+  phoneNumber: string;
+  email?: string;
+  address: string;
+  ownLease: 'Own' | 'Lease';
+  employees: string;
   notes?: string;
   appointmentType: AppointmentType;
   bookedBy: string;
@@ -22,9 +27,14 @@ export interface Appointment {
 }
 
 export interface BookingFormData {
-  customerName: string;
-  customerPhone: string;
-  customerEmail?: string;
+  businessName: string;
+  meterNumber: string;
+  contactName: string;
+  phoneNumber: string;
+  email?: string;
+  address: string;
+  ownLease: 'Own' | 'Lease';
+  employees: string;
   notes?: string;
   appointmentType: AppointmentType;
 } 

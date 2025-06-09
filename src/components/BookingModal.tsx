@@ -22,9 +22,14 @@ export default function BookingModal({
   salesRep,
 }: BookingModalProps) {
   const [formData, setFormData] = useState<BookingFormData>({
-    customerName: '',
-    customerPhone: '',
-    customerEmail: '',
+    businessName: '',
+    meterNumber: '',
+    contactName: '',
+    phoneNumber: '',
+    email: '',
+    address: '',
+    ownLease: 'Own',
+    employees: '',
     notes: '',
     appointmentType: 'Sales Call',
   });
@@ -37,7 +42,7 @@ export default function BookingModal({
     setIsSubmitting(true);
     try {
       await onSubmit(formData);
-      onClose();
+      // Do not call onClose here; let the parent handle it after Firestore updates
     } catch (error) {
       console.error('Error booking appointment:', error);
     } finally {
@@ -55,19 +60,46 @@ export default function BookingModal({
           </p>
           <p className="text-gray-600">Sales Rep: {salesRep}</p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 max-h-96 overflow-y-auto">
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Customer Name *
+              Business Name *
             </label>
             <input
-              id="customer-name"
               type="text"
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
-              value={formData.customerName}
+              value={formData.businessName}
               onChange={(e) =>
-                setFormData({ ...formData, customerName: e.target.value })
+                setFormData({ ...formData, businessName: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Meter # *
+            </label>
+            <input
+              type="text"
+              required
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+              value={formData.meterNumber}
+              onChange={(e) =>
+                setFormData({ ...formData, meterNumber: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Contact Name *
+            </label>
+            <input
+              type="text"
+              required
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+              value={formData.contactName}
+              onChange={(e) =>
+                setFormData({ ...formData, contactName: e.target.value })
               }
             />
           </div>
@@ -76,13 +108,12 @@ export default function BookingModal({
               Phone Number *
             </label>
             <input
-              id="customer-phone"
               type="tel"
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
-              value={formData.customerPhone}
+              value={formData.phoneNumber}
               onChange={(e) =>
-                setFormData({ ...formData, customerPhone: e.target.value })
+                setFormData({ ...formData, phoneNumber: e.target.value })
               }
             />
           </div>
@@ -91,12 +122,57 @@ export default function BookingModal({
               Email (optional)
             </label>
             <input
-              id="customer-email"
               type="email"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
-              value={formData.customerEmail}
+              value={formData.email}
               onChange={(e) =>
-                setFormData({ ...formData, customerEmail: e.target.value })
+                setFormData({ ...formData, email: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Address (Street #, City, Zip) *
+            </label>
+            <input
+              type="text"
+              required
+              placeholder="123 Main St, City, 12345"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+              value={formData.address}
+              onChange={(e) =>
+                setFormData({ ...formData, address: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Own/Lease *
+            </label>
+            <select
+              required
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+              value={formData.ownLease}
+              onChange={(e) =>
+                setFormData({ ...formData, ownLease: e.target.value as 'Own' | 'Lease' })
+              }
+            >
+              <option value="Own">Own</option>
+              <option value="Lease">Lease</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Employees *
+            </label>
+            <input
+              type="text"
+              required
+              placeholder="e.g., 5-10, 25, 100+"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+              value={formData.employees}
+              onChange={(e) =>
+                setFormData({ ...formData, employees: e.target.value })
               }
             />
           </div>
