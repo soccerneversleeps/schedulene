@@ -35,13 +35,13 @@ export default function AppointmentSlot({
       <button
         onClick={handleMainClick}
         className={cn(
-          'w-full h-full p-2 rounded-lg text-sm transition-all duration-200',
-          'border focus:outline-none focus:ring-2 focus:ring-opacity-50',
+          'w-full h-full p-2 rounded-lg text-sm transition-all duration-300 transform hover:scale-105',
+          'border focus:outline-none focus:ring-2 focus:ring-opacity-50 shadow-md hover:shadow-lg',
           'flex flex-col justify-center items-center text-center',
           isAvailable
-            ? 'border-gray-200 bg-green-50 hover:bg-green-100 hover:border-green-400 focus:ring-green-500 cursor-pointer'
-            : 'border-purple-200 bg-purple-50 hover:bg-purple-100 hover:border-purple-400 focus:ring-purple-500 cursor-pointer',
-          isToday && 'ring-2 ring-blue-400'
+            ? 'border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-100 hover:from-emerald-100 hover:to-green-200 hover:border-emerald-400 focus:ring-emerald-500 cursor-pointer'
+            : 'border-violet-200 bg-gradient-to-br from-violet-50 to-purple-100 hover:from-violet-100 hover:to-purple-200 hover:border-violet-400 focus:ring-violet-500 cursor-pointer',
+          isToday && 'ring-2 ring-blue-400 ring-offset-2'
         )}
       >
         <div className="font-medium text-gray-900 text-xs leading-tight">
@@ -51,8 +51,8 @@ export default function AppointmentSlot({
           {salesRep}
         </div>
         <div className={cn(
-          'font-medium text-xs leading-tight mt-1',
-          isAvailable ? 'text-green-600' : 'text-purple-600'
+          'font-semibold text-xs leading-tight mt-1',
+          isAvailable ? 'text-emerald-700' : 'text-violet-700'
         )}>
           {isAvailable ? 'Available' : appointment?.contactName}
         </div>
