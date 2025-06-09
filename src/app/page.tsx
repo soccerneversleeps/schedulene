@@ -4,9 +4,10 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import Calendar from '@/components/Calendar';
+import UnauthorizedAccess from '@/components/UnauthorizedAccess';
 
 export default function Home() {
-  const { user, loading } = useAuth();
+  const { user, loading, isAuthorized } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -25,6 +26,11 @@ export default function Home() {
 
   if (!user) {
     return null;
+  }
+
+  // Check if user is authorized to access the system
+  if (!isAuthorized) {
+    return <UnauthorizedAccess />;
   }
 
   return (

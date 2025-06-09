@@ -4,10 +4,12 @@ import React, { createContext, useEffect, useState } from "react";
 import { signInWithPopup, GoogleAuthProvider, signOut as firebaseSignOut } from "firebase/auth";
 import { User } from "firebase/auth";
 import { auth } from "../firebase/firebase";
+import { isUserAuthorized } from "../auth/authorizedUsers";
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isAuthorized: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -15,6 +17,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  isAuthorized: false,
   signInWithGoogle: async () => {},
   signOut: async () => {},
 });
@@ -22,6 +25,9 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Check if current user is authorized
+  const isAuthorized = user?.email ? isUserAuthorized(user.email) : false;
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -50,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut: signOutUser }}>
+    <AuthContext.Provider value={{ user, loading, isAuthorized, signInWithGoogle, signOut: signOutUser }}>
       {children}
     </AuthContext.Provider>
   );
