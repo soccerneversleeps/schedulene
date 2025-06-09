@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Appointment, SalesRep, TimeSlot } from '@/lib/types/appointment';
@@ -118,6 +118,28 @@ export default function Calendar() {
     } catch (error) {
       console.error('❌ Error deleting appointment:', error);
       alert('Error deleting appointment. Please try again.');
+    }
+  };
+
+  const handleUpdateAppointment = async (appointmentId: string, formData: BookingFormData) => {
+    if (!user) {
+      console.error('❌ Missing user for appointment update');
+      return;
+    }
+    
+    console.log('📝 Updating appointment:', appointmentId, formData.contactName);
+    
+    try {
+      const appointmentRef = doc(db, 'appointments', appointmentId);
+      await updateDoc(appointmentRef, {
+        ...formData,
+        updatedAt: serverTimestamp(),
+      });
+      console.log('✅ Appointment updated successfully');
+      setViewingAppointment(null);
+    } catch (error) {
+      console.error('❌ Error updating appointment:', error);
+      alert('Error updating appointment. Please try again.');
     }
   };
 
@@ -324,6 +346,7 @@ export default function Calendar() {
           onClose={() => setViewingAppointment(null)}
           appointment={viewingAppointment}
           onDelete={handleDeleteAppointment}
+          onUpdate={handleUpdateAppointment}
         />
       )}
     </div>
