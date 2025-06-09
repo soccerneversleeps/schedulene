@@ -5,8 +5,9 @@ service cloud.firestore {
     function isAuthorizedUser() {
       return request.auth != null && 
              request.auth.token.email in [
-               'your-email@gmail.com',  // Replace with your actual emails
-               'admin@familyfirstenergy.com'  // Replace with real emails
+               'soccerneversleeps@gmail.com',      // Admin user
+               'mrjonnyinfante@gmail.com',         // Johnny Infante
+               'm.gutierrez@reliableenergy.net'    // M. Gutierrez - Reliable Energy
                // Add more authorized emails here - KEEP IN SYNC with authorizedUsers.ts
              ];
     }
